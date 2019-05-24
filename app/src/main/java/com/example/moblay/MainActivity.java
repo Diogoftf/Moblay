@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.example.moblay.Adapter.VideoAdapter;
 import com.example.moblay.Model.VideoModel;
@@ -91,5 +92,23 @@ public class MainActivity extends AppCompatActivity {
         VideoAdapter videoAdapter = new VideoAdapter(getApplicationContext(), arrayListVideos, this);
         _recyclerView.setAdapter(videoAdapter);
 
+    }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(MainActivity.this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, "Permission granted!", Toast.LENGTH_SHORT).show();
+
+                        init();
+                    }
+                } else {
+                    Toast.makeText(this, "No permission granted!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+            }
+        }
     }
 }
