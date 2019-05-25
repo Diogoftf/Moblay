@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         _recyclerView = (RecyclerView) findViewById(R.id.recyclerViewVideo);
-        recycleviewLayoutManager = new GridLayoutManager(getApplicationContext(),2);
+        recycleviewLayoutManager = new GridLayoutManager(getApplicationContext(),3);
         _recyclerView.setLayoutManager(recycleviewLayoutManager);
         arrayListVideos = new ArrayList<>();
         fetchVideosFromGallery();
