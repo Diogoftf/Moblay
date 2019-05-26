@@ -2,6 +2,7 @@ package com.example.moblay.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.moblay.Model.VideoModel;
 import com.example.moblay.R;
+import com.example.moblay.VideoPlayerActivity;
 
 import java.util.ArrayList;
 
@@ -44,7 +46,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         holder._rl_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You clicked the video", Toast.LENGTH_SHORT).show();
+                //plays the video
+                Intent i = new Intent(context, VideoPlayerActivity.class);
+                i.putExtra("video", arrayListVideos.get(position).getStr_path());
+                activity.startActivity(i);
             }
         });
     }
