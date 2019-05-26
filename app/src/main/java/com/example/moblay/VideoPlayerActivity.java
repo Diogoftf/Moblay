@@ -1,6 +1,7 @@
 package com.example.moblay;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -105,6 +106,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        setVideoSize();
         mediaPlayer.start();
 
         Toast.makeText(VideoPlayerActivity.this,
@@ -174,5 +176,42 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     public int getAudioSessionId() {
         return mediaPlayer.getAudioSessionId();
+    }
+
+    private void setVideoSize() {
+
+        // // Get the dimensions of the video
+        int videoWidth = mediaPlayer.getVideoWidth();
+        int videoHeight = mediaPlayer.getVideoHeight();
+        float videoProportion = (float) videoWidth / (float) videoHeight;
+
+        // Get the width of the screen
+        int screenWidth = getWindowManager().getDefaultDisplay().getWidth();
+        int screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+        float screenProportion = (float) screenWidth / (float) screenHeight;
+
+        // Get the SurfaceView layout parameters
+        android.view.ViewGroup.LayoutParams lp = _surfaceView.getLayoutParams();
+        if (videoProportion > screenProportion) {
+            lp.width = screenWidth;
+            lp.height = (int) ((float) screenWidth / videoProportion);
+        } else {
+            lp.width = (int) (videoProportion * (float) screenHeight);
+            lp.height = screenHeight;
+        }
+        // Commit the layout parameters
+        _surfaceView.setLayoutParams(lp);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setVideoSize();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            setVideoSize();
+        }
     }
 }
