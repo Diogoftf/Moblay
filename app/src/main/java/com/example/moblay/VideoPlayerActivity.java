@@ -1,11 +1,16 @@
 package com.example.moblay;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -17,8 +22,14 @@ import android.widget.MediaController;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, MediaController.MediaPlayerControl {
+public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHolder.Callback,
+        MediaPlayer.OnPreparedListener, MediaController.MediaPlayerControl,
+        GestureOverlayView.OnGesturePerformedListener {
+
+    private GestureOverlayView gestureOverlayView = null;
+    private GestureLibrary gestureLibrary = null;
 
     private SurfaceView _surfaceView;
     private MediaPlayer mediaPlayer;
@@ -27,10 +38,25 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     private MediaController mediaController;
     private Handler handler;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
+
+        GestureOverlayView gestureOverlayView = (GestureOverlayView)findViewById(R.id.gesture);
+        gestureOverlayView.addOnGesturePerformedListener(this);
+        gestureLibrary = GestureLibraries.fromRawResource(this, R.raw.gesture);
+
+        if (!gestureLibrary.load()) {
+            finish();
+        }
+
+//        Context context = getApplicationContext();
+//        init(context);
+//
+//        GesturePerformListener gesturePerformListener = new GesturePerformListener(gestureLibrary, context);
+//        gestureOverlayView.addOnGesturePerformedListener(gesturePerformListener);
 
         handler = new Handler();
 
@@ -46,11 +72,35 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(mediaController != null){
-                    mediaController.show();
+                    //mediaController.show();
                 }
                 return false;
             }
         });
+    }
+
+    /* Initialise class or instance variables. */
+    private void init(Context context)
+    {
+        if(gestureLibrary == null)
+        {
+            // Load custom gestures from gesture.txt file.
+            gestureLibrary = GestureLibraries.fromRawResource(context, R.raw.gesture);
+
+            if(!gestureLibrary.load())
+            {
+                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                alertDialog.setMessage("Custom gesture file load failed.");
+                alertDialog.show();
+
+                finish();
+            }
+        }
+
+        if(gestureOverlayView == null)
+        {
+            gestureOverlayView = (GestureOverlayView)findViewById(R.id.gesture);
+        }
     }
 
     @Override
@@ -119,10 +169,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
             public void run() {
                 mediaController.setEnabled(true);
-                mediaController.show();
+                //mediaController.show();
             }
         });
     }
+
+
 
     @Override
     public void start() {
@@ -215,6 +267,54 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             setVideoSize();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             setVideoSize();
+        }
+    }
+
+    @Override
+    public void onGesturePerformed(GestureOverlayView o, Gesture g) {
+
+        // Recognize the gesture and return prediction list.
+        ArrayList<Prediction> predictionList = gestureLibrary.recognize(g);
+
+        int size = predictionList.size();
+
+        if(size > 0)
+        {
+            StringBuffer messageBuffer = new StringBuffer();
+
+            // Get the first prediction.
+            Prediction firstPrediction = predictionList.get(0);
+
+            /* Higher score higher gesture match. */
+            if(firstPrediction.score > 1)
+            {
+                String action = firstPrediction.name;
+
+                messageBuffer.append("Your gesture match " + action);
+
+                if(action.equals("Play_pause")) {
+                    if(isPlaying()){
+                        //stops the video
+                        pause();
+                    }
+                    else {
+                        //plays the video
+                        start();
+                    }
+                } else if(action.equals("Next")) {
+                    //go to next video
+                }
+                else if(action.equals("Previous")) {
+                    //go to previous video
+                }
+            }else
+            {
+                messageBuffer.append("Your gesture do not match any predefined gestures.");
+            }
+
+            // Display a toast with related messages.
+            Toast toast = Toast.makeText(getApplicationContext(), messageBuffer.toString(), Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 }

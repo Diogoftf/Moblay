@@ -91,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
         //call the adapter class and set it to recyclerview
         VideoAdapter videoAdapter = new VideoAdapter(getApplicationContext(), arrayListVideos, this);
         _recyclerView.setAdapter(videoAdapter);
-
     }
+
+
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
         switch (requestCode) {
             case MY_PERMISSION_REQUEST: {
