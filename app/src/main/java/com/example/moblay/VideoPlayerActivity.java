@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -186,8 +187,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         float videoProportion = (float) videoWidth / (float) videoHeight;
 
         // Get the width of the screen
-        int screenWidth = getWindowManager().getDefaultDisplay().getWidth();
-        int screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int screenWidth = displaymetrics.widthPixels;
+        int screenHeight = displaymetrics.heightPixels;
         float screenProportion = (float) screenWidth / (float) screenHeight;
 
         // Get the SurfaceView layout parameters
