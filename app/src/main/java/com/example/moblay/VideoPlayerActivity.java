@@ -72,7 +72,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(mediaController != null){
-                    //mediaController.show();
+                    mediaController.show();
                 }
                 return false;
             }
@@ -169,7 +169,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
             public void run() {
                 mediaController.setEnabled(true);
-                //mediaController.show();
+                mediaController.show();
             }
         });
     }
