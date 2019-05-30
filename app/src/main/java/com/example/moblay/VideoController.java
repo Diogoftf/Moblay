@@ -132,11 +132,6 @@ public class VideoController extends MediaController {
             mPauseButton.setOnClickListener(mPauseListener);
         }
 
-        mFullscreenButton = (ImageButton) v.findViewById(R.id.fullscreen);
-        if (mFullscreenButton != null) {
-            mFullscreenButton.requestFocus();
-            mFullscreenButton.setOnClickListener(mFullscreenListener);
-        }
 
         mFfwdButton = (ImageButton) v.findViewById(R.id.ffwd);
         if (mFfwdButton != null) {
@@ -390,13 +385,6 @@ public class VideoController extends MediaController {
         }
     };
 
-    private View.OnClickListener mFullscreenListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            doToggleFullscreen();
-            show(sDefaultTimeout);
-        }
-    };
-
     public void updatePausePlay() {
         if (mRoot == null || mPauseButton == null || mPlayer == null) {
             return;
@@ -421,15 +409,6 @@ public class VideoController extends MediaController {
         }
         updatePausePlay();
     }
-
-    private void doToggleFullscreen() {
-        if (mPlayer == null) {
-            return;
-        }
-
-        mPlayer.toggleFullScreen();
-    }
-
     // There are two scenarios that can trigger the seekbar listener to trigger:
     //
     // The first is the user using the touchpad to adjust the posititon of the
@@ -544,7 +523,7 @@ public class VideoController extends MediaController {
             }
 
             int pos = mPlayer.getCurrentPosition();
-            pos += 15000; // milliseconds
+            pos += 5000; // milliseconds
             mPlayer.seekTo(pos);
             setProgress();
 
