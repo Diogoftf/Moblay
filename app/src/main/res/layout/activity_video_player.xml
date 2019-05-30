@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/gesture">
+
     <RelativeLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/relLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_gravity="center"
         android:background="#000000"
         tools:context=".VideoPlayerActivity">
 
@@ -18,5 +18,6 @@
             android:id="@+id/surfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </RelativeLayout>
 </android.gesture.GestureOverlayView>

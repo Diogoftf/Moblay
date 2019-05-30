@@ -14,29 +14,33 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHolder.Callback,
-        MediaPlayer.OnPreparedListener, MediaController.MediaPlayerControl,
+        MediaPlayer.OnPreparedListener, VideoController.MediaPlayerControl,
         GestureOverlayView.OnGesturePerformedListener {
 
     private GestureOverlayView gestureOverlayView = null;
     private GestureLibrary gestureLibrary = null;
 
     private SurfaceView _surfaceView;
+    private RelativeLayout _relLay;
     private MediaPlayer mediaPlayer;
     private SurfaceHolder surfaceHolder;
     private String videoPath;
-    private MediaController mediaController;
+    private VideoController mediaController;
     private Handler handler;
+    private Runnable run;
+    private boolean stop = false;
 
 
     @Override
@@ -52,17 +56,13 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             finish();
         }
 
-//        Context context = getApplicationContext();
-//        init(context);
-//
-//        GesturePerformListener gesturePerformListener = new GesturePerformListener(gestureLibrary, context);
-//        gestureOverlayView.addOnGesturePerformedListener(gesturePerformListener);
-
         handler = new Handler();
 
         videoPath = getIntent().getStringExtra("video");
 
-        mediaController = new MediaController(this);
+        mediaController = new VideoController(this);
+
+        _relLay = (RelativeLayout) findViewById(R.id.relLay);
 
         _surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         surfaceHolder = _surfaceView.getHolder();
@@ -113,6 +113,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     protected void onDestroy() {
         super.onDestroy();
         releaseMediaPlayer();
+        handler.removeCallbacks(run);
     }
 
     private void releaseMediaPlayer() {
@@ -136,7 +137,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         try {
             mediaPlayer.setDataSource(videoPath);
             mediaPlayer.prepare();
-            mediaController = new MediaController(this);
+            mediaController = new VideoController(this);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(VideoPlayerActivity.this,
@@ -164,12 +165,14 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
                 "onPrepared()", Toast.LENGTH_LONG).show();
 
         mediaController.setMediaPlayer(this);
-        mediaController.setAnchorView(_surfaceView);
-        handler.post(new Runnable() {
+        mediaController.setAnchorView(_relLay);
+
+        handler.post(run = new Runnable() {
 
             public void run() {
                 mediaController.setEnabled(true);
                 mediaController.show();
+
             }
         });
     }
@@ -188,11 +191,17 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     public int getDuration() {
+        if(mediaPlayer == null){
+            return 0;
+        }
         return mediaPlayer.getDuration();
     }
 
     @Override
     public int getCurrentPosition() {
+        if(mediaPlayer == null){
+            return 0;
+        }
         return mediaPlayer.getCurrentPosition();
     }
 
@@ -203,6 +212,9 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     public boolean isPlaying() {
+        if(mediaPlayer == null){
+            return false;
+        }
         return mediaPlayer.isPlaying();
     }
 
@@ -227,8 +239,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     }
 
     @Override
-    public int getAudioSessionId() {
-        return mediaPlayer.getAudioSessionId();
+    public void toggleFullScreen() {
+
     }
 
     private void setVideoSize() {
@@ -316,5 +328,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             Toast toast = Toast.makeText(getApplicationContext(), messageBuffer.toString(), Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("Process", "vou sair");
+        this.finish();
     }
 }
