@@ -71,6 +71,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         surfaceHolder = _surfaceView.getHolder();
         surfaceHolder.addCallback(this);
 
+        mediaPlayer = new MediaPlayer();
+
         _surfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -80,6 +82,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
                 return false;
             }
         });
+
     }
 
     /* Initialise class or instance variables. */
@@ -128,15 +131,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Toast.makeText(VideoPlayerActivity.this,
-                "surfaceCreated()", Toast.LENGTH_LONG).show();
-
-        // set mediaPlayer to surfaceView
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setDisplay(surfaceHolder);
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnPreparedListener(VideoPlayerActivity.this);
-
         initMediaPlayer(position);
     }
 
@@ -155,11 +149,27 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         setVideoSize();
         mediaPlayer.start();
 
-        Toast.makeText(VideoPlayerActivity.this,
-                "onPrepared()", Toast.LENGTH_LONG).show();
+//        Toast.makeText(VideoPlayerActivity.this,
+//                "onPrepared()", Toast.LENGTH_LONG).show();
 
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(_relLay);
+
+        mediaController.setPrevNextListeners(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("vv", "next");
+                nextVideo();
+
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("vv", "prev");
+                previousVideo();
+            }
+        });
+
 
         handler.post(run = new Runnable() {
 
@@ -172,7 +182,18 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     }
 
     public void initMediaPlayer(int pos){
+        if(mediaPlayer != null) {
+            mediaPlayer.reset();
+        }
+
+        // set mediaPlayer to surfaceView
+        mediaPlayer.setDisplay(surfaceHolder);
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnPreparedListener(VideoPlayerActivity.this);
+
+
         try {
+            Log.d("path:", videosPaths.get(pos));
             mediaPlayer.setDataSource(videosPaths.get(pos));
             mediaPlayer.prepare();
             mediaController = new VideoController(this);
@@ -335,6 +356,27 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             Toast toast = Toast.makeText(getApplicationContext(), messageBuffer.toString(), Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    public void nextVideo(){
+        if(position < videosPaths.size()-1 ) {
+            position++;
+        } else {
+            position = 0;
+        }
+
+        initMediaPlayer(position);
+    }
+
+    public void previousVideo(){
+        if (position <= 0) {
+            position = videosPaths.size()-1;
+        }
+        else {
+            position--;
+        }
+        
+        initMediaPlayer(position);
     }
 
     @Override

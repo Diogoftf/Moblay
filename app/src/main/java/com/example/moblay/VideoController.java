@@ -28,7 +28,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 
-public class VideoController extends MediaController {
+public class VideoController extends FrameLayout {
     private static final String TAG = "VideoControllerView";
 
     private MediaPlayerControl  mPlayer;
