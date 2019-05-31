@@ -343,9 +343,11 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
                     }
                 } else if(action.equals("Next")) {
                     //go to next video
+                    nextVideo();
                 }
                 else if(action.equals("Previous")) {
                     //go to previous video
+                    previousVideo();
                 }
             }else
             {
@@ -375,7 +377,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         else {
             position--;
         }
-        
+
         initMediaPlayer(position);
     }
 
