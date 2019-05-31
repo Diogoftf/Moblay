@@ -56,6 +56,8 @@ public class VideoController extends FrameLayout {
     private ImageButton         mFullscreenButton;
     private Handler             mHandler = new MessageHandler(this);
 
+    private Vibration vib;
+
     public VideoController(Context context, AttributeSet attrs) {
         super(context, attrs);
         mRoot = null;
@@ -63,6 +65,7 @@ public class VideoController extends FrameLayout {
         mUseFastForward = true;
         mFromXml = true;
 
+        vib = new Vibration();
         Log.i(TAG, TAG);
     }
 
@@ -71,11 +74,15 @@ public class VideoController extends FrameLayout {
         mContext = context;
         mUseFastForward = useFastForward;
 
+        vib = new Vibration();
+
         Log.i(TAG, TAG);
     }
 
     public VideoController(Context context) {
         this(context, true);
+
+        vib = new Vibration();
 
         Log.i(TAG, TAG);
     }
@@ -380,6 +387,7 @@ public class VideoController extends FrameLayout {
 
     private View.OnClickListener mPauseListener = new View.OnClickListener() {
         public void onClick(View v) {
+            vib.vibratePhone(mContext);
             doPauseResume();
             show(sDefaultTimeout);
         }
@@ -507,6 +515,8 @@ public class VideoController extends FrameLayout {
                 return;
             }
 
+            vib.vibratePhone(mContext);
+
             int pos = mPlayer.getCurrentPosition();
             pos -= 5000; // milliseconds
             mPlayer.seekTo(pos);
@@ -521,6 +531,8 @@ public class VideoController extends FrameLayout {
             if (mPlayer == null) {
                 return;
             }
+
+            vib.vibratePhone(mContext);
 
             int pos = mPlayer.getCurrentPosition();
             pos += 5000; // milliseconds
@@ -571,7 +583,6 @@ public class VideoController extends FrameLayout {
         boolean canPause();
         boolean canSeekBackward();
         boolean canSeekForward();
-        void    toggleFullScreen();
     }
 
     private static class MessageHandler extends Handler {

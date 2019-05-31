@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.moblay.Model.VideoModel;
 import com.example.moblay.R;
+import com.example.moblay.Vibration;
 import com.example.moblay.VideoPlayerActivity;
 
 import java.util.ArrayList;
@@ -24,11 +28,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     Context context;
     ArrayList<VideoModel> arrayListVideos;
     Activity activity;
+    Vibration vib;
 
     public VideoAdapter(Context context, ArrayList<VideoModel> arrayListVideos, Activity activity) {
         this.context = context;
         this.arrayListVideos = arrayListVideos;
         this.activity = activity;
+
+        vib = new Vibration();
     }
 
     @Override
@@ -46,7 +53,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         holder._rl_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //plays the video
+
+                vib.vibratePhone(context);
+
                 Intent i = new Intent(context, VideoPlayerActivity.class);
 
                 // create a string array with paths of videos

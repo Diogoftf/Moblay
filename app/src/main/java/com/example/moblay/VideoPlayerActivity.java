@@ -7,6 +7,10 @@ import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -27,7 +31,7 @@ import java.util.ArrayList;
 
 public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHolder.Callback,
         MediaPlayer.OnPreparedListener, VideoController.MediaPlayerControl,
-        GestureOverlayView.OnGesturePerformedListener {
+        GestureOverlayView.OnGesturePerformedListener, SensorEventListener {
 
     private GestureOverlayView gestureOverlayView = null;
     private GestureLibrary gestureLibrary = null;
@@ -43,6 +47,9 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     private Runnable run;
     private int position;
     private boolean stop = false;
+    private SensorManager mgr;
+    private Sensor proximity;
+    private Vibration vib;
 
 
     @Override
@@ -53,10 +60,14 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         GestureOverlayView gestureOverlayView = (GestureOverlayView)findViewById(R.id.gesture);
         gestureOverlayView.addOnGesturePerformedListener(this);
         gestureLibrary = GestureLibraries.fromRawResource(this, R.raw.gesture);
+        mgr = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        proximity = mgr.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         if (!gestureLibrary.load()) {
             finish();
         }
+
+        vib = new Vibration();
 
         handler = new Handler();
 
@@ -111,8 +122,15 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     protected void onPause() {
+        mgr.unregisterListener(this, proximity);
         super.onPause();
         releaseMediaPlayer();
+    }
+
+    @Override
+    protected void onResume() {
+        mgr.registerListener(this, proximity, SensorManager.SENSOR_DELAY_NORMAL);
+        super.onResume();
     }
 
     @Override
@@ -158,6 +176,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         mediaController.setPrevNextListeners(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                vib.vibratePhone(getApplicationContext());
                 Log.d("vv", "next");
                 nextVideo();
 
@@ -165,6 +184,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         }, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                vib.vibratePhone(getApplicationContext());
                 Log.d("vv", "prev");
                 previousVideo();
             }
@@ -264,11 +284,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     public boolean canSeekForward() {
         return true;
-    }
-
-    @Override
-    public void toggleFullScreen() {
-
     }
 
     private void setVideoSize() {
@@ -386,5 +401,19 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         super.onBackPressed();
         Log.d("Process", "vou sair");
         this.finish();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.values[0] == 0.0) {
+            mediaPlayer.setVolume(0,0);
+        } else {
+            mediaPlayer.setVolume(1,1);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
