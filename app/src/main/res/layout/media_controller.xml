@@ -26,37 +26,37 @@
                 <ImageButton
                     android:id="@+id/prev"
                     style="@android:style/MediaButton.Previous"
-                    android:padding="15dp"
+                    android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/previous" />
+                    android:src="@drawable/previousyellow" />
 
                 <ImageButton
                     android:id="@+id/rew"
                     style="@android:style/MediaButton.Rew"
-                    android:padding="15dp"
+                    android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/rewind" />
+                    android:src="@drawable/rewindyellow" />
 
                 <ImageButton
                     android:id="@+id/pause"
                     style="@android:style/MediaButton.Play"
-                    android:padding="15dp"
+                    android:padding="5dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/playvideo" />
+                    android:src="@drawable/playyellow" />
 
                 <ImageButton
                     android:id="@+id/ffwd"
                     style="@android:style/MediaButton.Ffwd"
-                    android:padding="15dp"
+                    android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/fastforward" />
+                    android:src="@drawable/ffyelow" />
 
                 <ImageButton
                     android:id="@+id/next"
                     style="@android:style/MediaButton.Next"
-                    android:padding="15dp"
+                    android:padding="10dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/next" />
+                    android:src="@drawable/nextyellow" />
 
             </LinearLayout>
 
