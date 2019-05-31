@@ -125,6 +125,26 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         mgr.unregisterListener(this, proximity);
         super.onPause();
         releaseMediaPlayer();
+        Log.d("SCREEN", "onPause");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("SCREEN", "onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+        Log.d("SCREEN", "onResume");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("SCREEN", "onStop");
     }
 
     @Override
@@ -136,6 +156,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("SCREEN", "onDestroy");
         releaseMediaPlayer();
         handler.removeCallbacks(run);
     }
@@ -166,9 +187,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     public void onPrepared(MediaPlayer mp) {
         setVideoSize();
         mediaPlayer.start();
-
-//        Toast.makeText(VideoPlayerActivity.this,
-//                "onPrepared()", Toast.LENGTH_LONG).show();
 
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(_relLay);
@@ -215,7 +233,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         try {
             mediaPlayer.setDataSource(videosPaths.get(pos));
             mediaPlayer.prepare();
-            mediaController = new VideoController(this);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(VideoPlayerActivity.this,
@@ -223,8 +240,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
                     Toast.LENGTH_LONG).show();
         }
     }
-
-
 
     @Override
     public void start() {
