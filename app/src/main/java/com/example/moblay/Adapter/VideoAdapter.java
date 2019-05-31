@@ -48,7 +48,18 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             public void onClick(View v) {
                 //plays the video
                 Intent i = new Intent(context, VideoPlayerActivity.class);
-                i.putExtra("video", arrayListVideos.get(position).getStr_path());
+
+                // create a string array with paths of videos
+                ArrayList<String> myPaths = new ArrayList<String>();
+
+                //add paths
+                for( int k = 0; k < arrayListVideos.size(); k++){
+                    myPaths.add(arrayListVideos.get(k).getStr_path());
+                }
+
+                i.putExtra("paths", myPaths);
+                i.putExtra("position", position);
+
                 activity.startActivity(i);
             }
         });

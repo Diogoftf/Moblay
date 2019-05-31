@@ -37,9 +37,11 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     private MediaPlayer mediaPlayer;
     private SurfaceHolder surfaceHolder;
     private String videoPath;
+    private ArrayList<String> videosPaths;
     private VideoController mediaController;
     private Handler handler;
     private Runnable run;
+    private int position;
     private boolean stop = false;
 
 
@@ -58,7 +60,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
         handler = new Handler();
 
-        videoPath = getIntent().getStringExtra("video");
+        videosPaths = getIntent().getExtras().getStringArrayList("paths");
+        position = getIntent().getIntExtra("position", 0);
 
         mediaController = new VideoController(this);
 
@@ -134,16 +137,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnPreparedListener(VideoPlayerActivity.this);
 
-        try {
-            mediaPlayer.setDataSource(videoPath);
-            mediaPlayer.prepare();
-            mediaController = new VideoController(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(VideoPlayerActivity.this,
-                    "something wrong!\n" + e.toString(),
-                    Toast.LENGTH_LONG).show();
-        }
+        initMediaPlayer(position);
     }
 
     @Override
@@ -175,6 +169,19 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
             }
         });
+    }
+
+    public void initMediaPlayer(int pos){
+        try {
+            mediaPlayer.setDataSource(videosPaths.get(pos));
+            mediaPlayer.prepare();
+            mediaController = new VideoController(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(VideoPlayerActivity.this,
+                    "something wrong!\n" + e.toString(),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
 

@@ -152,11 +152,11 @@ public class VideoController extends MediaController {
         // By default these are hidden. They will be enabled when setPrevNextListeners() is called
         mNextButton = (ImageButton) v.findViewById(R.id.next);
         if (mNextButton != null && !mFromXml && !mListenersSet) {
-            mNextButton.setVisibility(View.GONE);
+            mNextButton.setVisibility(View.VISIBLE);
         }
         mPrevButton = (ImageButton) v.findViewById(R.id.prev);
         if (mPrevButton != null && !mFromXml && !mListenersSet) {
-            mPrevButton.setVisibility(View.GONE);
+            mPrevButton.setVisibility(View.VISIBLE);
         }
 
         mProgress = (ProgressBar) v.findViewById(R.id.mediacontroller_progress);
