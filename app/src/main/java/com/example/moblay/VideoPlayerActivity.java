@@ -151,6 +151,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     protected void onResume() {
         mgr.registerListener(this, proximity, SensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
+        //mediaPlayer.start();
+        Log.d("SCREEN", "onResume");
     }
 
     @Override
