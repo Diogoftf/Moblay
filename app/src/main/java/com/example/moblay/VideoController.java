@@ -290,11 +290,9 @@ public class VideoController extends FrameLayout {
 
     private int setProgress() {
         if (mPlayer == null || mDragging) {
-            Log.d("Process", "bye");
             return 0;
         }
 
-        Log.d("Process", "hi");
         int position = mPlayer.getCurrentPosition();
         int duration = mPlayer.getDuration();
         if (mProgress != null) {
@@ -391,9 +389,9 @@ public class VideoController extends FrameLayout {
         }
 
         if (mPlayer.isPlaying()) {
-            mPauseButton.setImageResource(R.drawable.pause);
+            mPauseButton.setImageResource(R.drawable.pauseyellow);
         } else {
-            mPauseButton.setImageResource(R.drawable.playvideo);
+            mPauseButton.setImageResource(R.drawable.playyellow);
         }
     }
 

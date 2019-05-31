@@ -158,14 +158,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         mediaController.setPrevNextListeners(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("vv", "next");
                 nextVideo();
 
             }
         }, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("vv", "prev");
                 previousVideo();
             }
         });
@@ -193,7 +191,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
 
         try {
-            Log.d("path:", videosPaths.get(pos));
             mediaPlayer.setDataSource(videosPaths.get(pos));
             mediaPlayer.prepare();
             mediaController = new VideoController(this);
@@ -326,7 +323,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             Prediction firstPrediction = predictionList.get(0);
 
             /* Higher score higher gesture match. */
-            if(firstPrediction.score > 1)
+            if(firstPrediction.score > 2)
             {
                 String action = firstPrediction.name;
 
@@ -384,7 +381,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.d("Process", "vou sair");
         this.finish();
     }
 }
