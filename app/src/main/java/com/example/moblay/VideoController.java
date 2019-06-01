@@ -37,6 +37,7 @@ public class VideoController extends FrameLayout {
     private View                mRoot;
     private ProgressBar         mProgress;
     private TextView            mEndTime, mCurrentTime;
+    private FrameLayout         frameLayout;
     private boolean             mShowing;
     private boolean             mDragging;
     private static final int    sDefaultTimeout = 3000;
@@ -180,6 +181,11 @@ public class VideoController extends FrameLayout {
         mFormatBuilder = new StringBuilder();
         mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
 
+        frameLayout = (FrameLayout) v.findViewById(R.id.frameLayout);
+        if (frameLayout != null) {
+            frameLayout.setOnClickListener(frameLayoutListener);
+        }
+
         installPrevNextListeners();
     }
 
@@ -278,6 +284,7 @@ public class VideoController extends FrameLayout {
             Log.w("MediaController", "already removed");
         }
         mShowing = false;
+
     }
 
     private String stringForTime(int timeMs) {
@@ -524,6 +531,22 @@ public class VideoController extends FrameLayout {
         }
     };
 
+    private View.OnClickListener frameLayoutListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (mPlayer == null) {
+                return;
+            }
+
+            if(isShowing()) {
+                hide();
+            }
+            else {
+                show(sDefaultTimeout);
+            }
+
+        }
+    };
+
     private View.OnClickListener mFfwdListener = new View.OnClickListener() {
         public void onClick(View v) {
             if (mPlayer == null) {
@@ -552,6 +575,7 @@ public class VideoController extends FrameLayout {
             mPrevButton.setEnabled(mPrevListener != null);
         }
     }
+
 
     public void setPrevNextListeners(View.OnClickListener next, View.OnClickListener prev) {
         mNextListener = next;

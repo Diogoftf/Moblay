@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -84,7 +85,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
         mediaPlayer = new MediaPlayer();
 
-        _surfaceView.setOnTouchListener(new View.OnTouchListener() {
+        _relLay.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(mediaController != null){
@@ -190,7 +191,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             @Override
             public void onClick(View v) {
                 vib.vibratePhone(getApplicationContext());
-                Log.d("vv", "next");
                 nextVideo();
 
             }
@@ -198,7 +198,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             @Override
             public void onClick(View v) {
                 vib.vibratePhone(getApplicationContext());
-                Log.d("vv", "prev");
                 previousVideo();
             }
         });
