@@ -307,6 +307,26 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int screenWidth = displaymetrics.widthPixels;
         int screenHeight = displaymetrics.heightPixels;
+
+        // status bar height
+        int statusBarHeight = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+
+        screenHeight = screenHeight - statusBarHeight;
+
+        // navigation bar height
+        int navigationBarHeight = 0;
+        resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            navigationBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+
+        screenHeight = screenHeight - navigationBarHeight;
+
+
         float screenProportion = (float) screenWidth / (float) screenHeight;
 
         // Get the SurfaceView layout parameters
