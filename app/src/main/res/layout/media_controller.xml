@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:background="#000000"
+        android:alpha="0.5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#CC000000"
-            android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:alpha="0.9">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingTop="4dip">
@@ -24,14 +27,14 @@
                 <ImageButton
                     android:id="@+id/prev"
                     style="@android:style/MediaButton.Previous"
-                    android:padding="10dp"
+                    android:padding="11dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/previousyellow" />
 
                 <ImageButton
                     android:id="@+id/rew"
                     style="@android:style/MediaButton.Rew"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/rewindyellow" />
 
@@ -45,14 +48,14 @@
                 <ImageButton
                     android:id="@+id/ffwd"
                     style="@android:style/MediaButton.Ffwd"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ffyelow" />
 
                 <ImageButton
                     android:id="@+id/next"
                     style="@android:style/MediaButton.Next"
-                    android:padding="10dp"
+                    android:padding="11dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/nextyellow" />
 
@@ -61,7 +64,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true">
 
                 <TextView
                     android:id="@+id/time_current"
@@ -78,6 +82,7 @@
                 <SeekBar
                     android:id="@+id/mediacontroller_progress"
                     style="?android:attr/progressBarStyleHorizontal"
+                    android:progressBackgroundTint="#ffffff"
                     android:layout_width="271dp"
                     android:layout_height="32dip"
                     android:layout_weight="1" />
@@ -108,6 +113,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+
     </RelativeLayout>
 
+</FrameLayout>
