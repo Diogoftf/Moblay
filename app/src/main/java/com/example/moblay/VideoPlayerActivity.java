@@ -384,6 +384,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
                         //plays the video
                         start();
                     }
+                    mediaController.updatePausePlay();
                 } else if(action.equals("Next")) {
                     //go to next video
                     nextVideo();
