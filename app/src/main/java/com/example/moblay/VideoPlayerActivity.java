@@ -124,7 +124,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     protected void onPause() {
         mgr.unregisterListener(this, proximity);
         super.onPause();
-        releaseMediaPlayer();
         Log.d("SCREEN", "onPause");
     }
 
