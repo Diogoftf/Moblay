@@ -123,6 +123,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     protected void onPause() {
         mgr.unregisterListener(this, proximity);
+        mediaPlayer.pause();
         super.onPause();
         Log.d("SCREEN", "onPause");
     }
@@ -143,7 +144,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     protected void onResume() {
         mgr.registerListener(this, proximity, SensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
-        //mediaPlayer.start();
+        mediaPlayer.start();
         Log.d("SCREEN", "onResume");
     }
 
@@ -214,9 +215,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     }
 
     public void initMediaPlayer(int pos){
-        if(mediaPlayer != null) {
-            mediaPlayer.reset();
-        }
 
         // set mediaPlayer to surfaceView
         mediaPlayer.setDisplay(surfaceHolder);
@@ -411,6 +409,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             position = 0;
         }
 
+        if(mediaPlayer != null) {
+            mediaPlayer.reset();
+        }
+
         initMediaPlayer(position);
     }
 
@@ -422,6 +424,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             position--;
         }
 
+        if(mediaPlayer != null) {
+            mediaPlayer.reset();
+        }
+        
         initMediaPlayer(position);
     }
 
