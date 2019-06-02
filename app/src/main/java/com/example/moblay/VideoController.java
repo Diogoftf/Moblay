@@ -5,23 +5,24 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
@@ -56,8 +57,7 @@ public class VideoController extends FrameLayout {
     private ImageButton         mPrevButton;
     private ImageButton         mReplayButton;
     private Handler             mHandler = new MessageHandler(this);
-
-    private Vibration vib;
+    private Vibration           vib;
 
     public VideoController(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -188,7 +188,7 @@ public class VideoController extends FrameLayout {
 
         frameLayout = (FrameLayout) v.findViewById(R.id.frameLayout);
         if (frameLayout != null) {
-            frameLayout.setOnClickListener(frameLayoutListener);
+            frameLayout.setOnTouchListener(frameLayoutListener);
         }
 
         installPrevNextListeners();
@@ -535,30 +535,63 @@ public class VideoController extends FrameLayout {
                 return;
             }
 
-            vib.vibratePhone(mContext);
-
-            int pos = mPlayer.getCurrentPosition();
-            pos -= 5000; // milliseconds
-            mPlayer.seekTo(pos);
-            setProgress();
+            rewind();
 
             show(sDefaultTimeout);
         }
     };
 
-    private View.OnClickListener frameLayoutListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            if (mPlayer == null) {
-                return;
+    public void rewind(){
+        vib.vibratePhone(mContext);
+
+        int pos = mPlayer.getCurrentPosition();
+        pos -= 5000; // milliseconds
+        mPlayer.seekTo(pos);
+        setProgress();
+    }
+
+    public void ffRewGesture(MotionEvent e){
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(displaymetrics);
+
+        int screenWidth = displaymetrics.widthPixels;
+        int screenMiddle= screenWidth/2;
+
+        if(e.getX() <= screenMiddle - 20 ){
+            rewind();
+        }
+        else if(e.getX() > screenMiddle + 20){
+            fforward();
+        }
+    }
+
+    private View.OnTouchListener frameLayoutListener = new View.OnTouchListener() {
+        private GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                ffRewGesture(e);
+                return super.onDoubleTap(e);
             }
 
-            if(isShowing()) {
-                hide();
-            }
-            else {
-                show(sDefaultTimeout);
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if(isShowing()) {
+                    hide();
+                }
+                else {
+                    show(sDefaultTimeout);
+                }
+                return super.onSingleTapConfirmed(e);
             }
 
+        });
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            gestureDetector.onTouchEvent(event);
+            return true;
         }
     };
 
@@ -568,16 +601,20 @@ public class VideoController extends FrameLayout {
                 return;
             }
 
-            vib.vibratePhone(mContext);
-
-            int pos = mPlayer.getCurrentPosition();
-            pos += 5000; // milliseconds
-            mPlayer.seekTo(pos);
-            setProgress();
+            fforward();
 
             show(sDefaultTimeout);
         }
     };
+
+    public void fforward() {
+        vib.vibratePhone(mContext);
+
+        int pos = mPlayer.getCurrentPosition();
+        pos += 5000; // milliseconds
+        mPlayer.seekTo(pos);
+        setProgress();
+    }
 
     private void installPrevNextListeners() {
         if (mNextButton != null) {

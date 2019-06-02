@@ -1,6 +1,5 @@
 package com.example.moblay;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
@@ -14,16 +13,15 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -34,7 +32,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         MediaPlayer.OnPreparedListener, VideoController.MediaPlayerControl,
         GestureOverlayView.OnGesturePerformedListener, SensorEventListener {
 
-    private GestureOverlayView gestureOverlayView = null;
     private GestureLibrary gestureLibrary = null;
     private SurfaceView _surfaceView;
     private RelativeLayout _relLay;
@@ -46,8 +43,9 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     private SensorManager mgr;
     private Sensor proximity;
     private Vibration vib;
-    private int position;
     private ArrayList<String> videosPaths;
+    private int screenWidth, screenHeight;
+    private int position;
 
 
     @Override
@@ -82,41 +80,35 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
         mediaPlayer = new MediaPlayer();
 
+
         _relLay.setOnTouchListener(new View.OnTouchListener() {
+            private GestureDetector gestureDetector = new GestureDetector(VideoPlayerActivity.this, new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    mediaController.ffRewGesture(e);
+
+                    return super.onDoubleTap(e);
+                }
+
+                @Override
+                public boolean onSingleTapConfirmed(MotionEvent e) {
+                    mediaController.show();
+                    return super.onSingleTapConfirmed(e);
+                }
+
+            });
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(mediaController != null){
-                    mediaController.show();
-                }
-                return false;
+                gestureDetector.onTouchEvent(event);
+                return true;
             }
+
+
         });
-
     }
 
-    /* Initialise class or instance variables. */
-    private void init(Context context)
-    {
-        if(gestureLibrary == null)
-        {
-            // Load custom gestures from gesture.txt file.
-            gestureLibrary = GestureLibraries.fromRawResource(context, R.raw.gesture);
-
-            if(!gestureLibrary.load())
-            {
-                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                alertDialog.setMessage("Custom gesture file load failed.");
-                alertDialog.show();
-
-                finish();
-            }
-        }
-
-        if(gestureOverlayView == null)
-        {
-            gestureOverlayView = (GestureOverlayView)findViewById(R.id.gesture);
-        }
-    }
 
     @Override
     protected void onPause() {
@@ -298,8 +290,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         // Get the width of the screen
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int screenWidth = displaymetrics.widthPixels;
-        int screenHeight = displaymetrics.heightPixels;
+        screenWidth = displaymetrics.widthPixels;
+        screenHeight = displaymetrics.heightPixels;
 
         // status bar height
         int statusBarHeight = 0;
@@ -373,6 +365,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
                     if(isPlaying()){
                         //stops the video
                         pause();
+
                     }
                     else {
                         //plays the video
@@ -387,14 +380,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
                     //go to previous video
                     previousVideo();
                 }
-            }else
-            {
-                messageBuffer.append("Your gesture do not match any predefined gestures.");
+                vib.vibratePhone(getApplicationContext());
             }
-
-            // Display a toast with related messages.
-            Toast toast = Toast.makeText(getApplicationContext(), messageBuffer.toString(), Toast.LENGTH_LONG);
-            toast.show();
         }
     }
 

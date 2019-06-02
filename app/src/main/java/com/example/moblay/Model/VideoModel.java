@@ -21,10 +21,6 @@ public class VideoModel {
         this.str_thumb = str_thumb;
     }
 
-    public boolean isBoolean_selected() {
-        return boolean_selected;
-    }
-
     public void setBoolean_selected(boolean boolean_selected) {
         this.boolean_selected = boolean_selected;
     }
