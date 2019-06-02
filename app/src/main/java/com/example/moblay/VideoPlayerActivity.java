@@ -36,21 +36,18 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     private GestureOverlayView gestureOverlayView = null;
     private GestureLibrary gestureLibrary = null;
-
     private SurfaceView _surfaceView;
     private RelativeLayout _relLay;
     private MediaPlayer mediaPlayer;
     private SurfaceHolder surfaceHolder;
-    private String videoPath;
-    private ArrayList<String> videosPaths;
     private VideoController mediaController;
     private Handler handler;
     private Runnable run;
-    private int position;
-    private boolean stop = false;
     private SensorManager mgr;
     private Sensor proximity;
     private Vibration vib;
+    private int position;
+    private ArrayList<String> videosPaths;
 
 
     @Override

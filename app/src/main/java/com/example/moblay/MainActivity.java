@@ -20,10 +20,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    RecyclerView _recyclerView;
-    RecyclerView.LayoutManager recycleviewLayoutManager;
-
-    ArrayList<VideoModel> arrayListVideos;
+    private RecyclerView _recyclerView;
+    private RecyclerView.LayoutManager recycleviewLayoutManager;
+    private ArrayList<VideoModel> arrayListVideos;
 
     private static final int MY_PERMISSION_REQUEST = 1;
 
