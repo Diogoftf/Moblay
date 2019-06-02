@@ -54,7 +54,7 @@ public class VideoController extends FrameLayout {
     private ImageButton         mRewButton;
     private ImageButton         mNextButton;
     private ImageButton         mPrevButton;
-    private ImageButton         mFullscreenButton;
+    private ImageButton         mReplayButton;
     private Handler             mHandler = new MessageHandler(this);
 
     private Vibration vib;
@@ -165,6 +165,11 @@ public class VideoController extends FrameLayout {
         mPrevButton = (ImageButton) v.findViewById(R.id.prev);
         if (mPrevButton != null && !mFromXml && !mListenersSet) {
             mPrevButton.setVisibility(View.VISIBLE);
+        }
+
+        mReplayButton = (ImageButton) v.findViewById(R.id.replay);
+        if (mReplayButton != null) {
+            mReplayButton.setOnClickListener(mReplayListener);
         }
 
         mProgress = (ProgressBar) v.findViewById(R.id.mediacontroller_progress);
@@ -397,6 +402,16 @@ public class VideoController extends FrameLayout {
             show(sDefaultTimeout);
         }
     };
+
+    private View.OnClickListener mReplayListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            vib.vibratePhone(mContext);
+            mPlayer.seekTo(0);
+            setProgress();
+            show(sDefaultTimeout);
+        }
+    };
+
 
     public void updatePausePlay() {
         if (mRoot == null || mPauseButton == null || mPlayer == null) {
