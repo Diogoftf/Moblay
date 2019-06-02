@@ -80,7 +80,6 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
 
         mediaPlayer = new MediaPlayer();
 
-
         _relLay.setOnTouchListener(new View.OnTouchListener() {
             private GestureDetector gestureDetector = new GestureDetector(VideoPlayerActivity.this, new GestureDetector.SimpleOnGestureListener() {
 
@@ -106,6 +105,14 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
             }
 
 
+        });
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+        {
+            public void onCompletion(MediaPlayer mp)
+            {
+                mediaController.show();
+            }
         });
     }
 
@@ -224,11 +231,13 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     public void start() {
         mediaPlayer.start();
+        mediaController.updatePausePlay();
     }
 
     @Override
     public void pause() {
         mediaPlayer.pause();
+        mediaController.updatePausePlay();
     }
 
     @Override
