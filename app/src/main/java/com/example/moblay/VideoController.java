@@ -572,6 +572,7 @@ public class VideoController extends FrameLayout {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
                 ffRewGesture(e);
+                show();
                 return super.onDoubleTap(e);
             }
 
