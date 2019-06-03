@@ -111,4 +111,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        init(); //initialize all of the controls
+    }
 }
