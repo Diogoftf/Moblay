@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".TutorialOne"
-            android:label="Ajuda">
+            android:label="Help">
 
         </activity>
         <activity
