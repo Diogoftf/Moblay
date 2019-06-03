@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.moblay.Adapter.VideoAdapter;
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView _recyclerView;
     private RecyclerView.LayoutManager recycleviewLayoutManager;
     private ArrayList<VideoModel> arrayListVideos;
+    private ArrayList<VideoModel> arrayListVideosToCompare;
+    private VideoAdapter videoAdapter;
 
     private static final int MY_PERMISSION_REQUEST = 1;
 
@@ -30,12 +33,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        arrayListVideos = new ArrayList<>();
+        arrayListVideosToCompare = new ArrayList<>();
+        videoAdapter = new VideoAdapter(getApplicationContext(), arrayListVideos, this);
+
+        _recyclerView = (RecyclerView) findViewById(R.id.recyclerViewVideo);
+        recycleviewLayoutManager = new GridLayoutManager(getApplicationContext(),3);
+        _recyclerView.setLayoutManager(recycleviewLayoutManager);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         startMain();
     }
 
@@ -56,11 +66,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        _recyclerView = (RecyclerView) findViewById(R.id.recyclerViewVideo);
-        recycleviewLayoutManager = new GridLayoutManager(getApplicationContext(),3);
-        _recyclerView.setLayoutManager(recycleviewLayoutManager);
-        arrayListVideos = new ArrayList<>();
+
         fetchVideosFromGallery();
+
+        if (compareArrays() == false){
+            _recyclerView = (RecyclerView) findViewById(R.id.recyclerViewVideo);
+            recycleviewLayoutManager = new GridLayoutManager(getApplicationContext(),3);
+            _recyclerView.setLayoutManager(recycleviewLayoutManager);
+            arrayListVideosToCompare.clear();
+            fetchVideosFromGallery();
+            setAdapter();
+        }
+
+    }
+
+    private boolean compareArrays(){
+        boolean value = true;
+
+        if(arrayListVideos.isEmpty() || arrayListVideos == null || arrayListVideos == null || arrayListVideos.isEmpty()){
+            value = false;
+        }
+        else if(arrayListVideos.size() != arrayListVideosToCompare.size()) {
+            value = false;
+        }
+        else{
+            for (int i = 0; i < arrayListVideos.size(); i ++){
+                if(!(arrayListVideos.get(i).equals(arrayListVideosToCompare.get(i)))){
+                    value = false;
+                }
+            }
+        }
+
+        return value;
+
     }
 
     private void fetchVideosFromGallery() {
@@ -84,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         thum = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
 
+        arrayListVideos.clear();
+
         while(cursor.moveToNext()) {
             absolutePathImage = cursor.getString(column_index_data);
             VideoModel videoModel = new VideoModel();
@@ -94,9 +134,16 @@ public class MainActivity extends AppCompatActivity {
             arrayListVideos.add(videoModel);
         }
 
+    }
+
+    public void setAdapter(){
         //call the adapter class and set it to recyclerview
-        VideoAdapter videoAdapter = new VideoAdapter(getApplicationContext(), arrayListVideos, this);
+        videoAdapter = new VideoAdapter(getApplicationContext(), arrayListVideos, this);
         _recyclerView.setAdapter(videoAdapter);
+
+        for (int i = 0; i < arrayListVideos.size(); i++){
+            arrayListVideosToCompare.add(arrayListVideos.get(i));
+        }
     }
 
 

@@ -24,4 +24,14 @@ public class VideoModel {
     public void setBoolean_selected(boolean boolean_selected) {
         this.boolean_selected = boolean_selected;
     }
+
+    public boolean equals (Object obj)
+    {
+        if (this == obj) return true;
+        if (this == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        // Class name is Employ & have lastname
+        VideoModel vm = (VideoModel) obj ;
+        return this.str_path.equals(vm.getStr_path());
+    }
 }
