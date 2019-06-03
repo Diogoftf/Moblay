@@ -30,7 +30,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        startMain();
+    }
+
+    private void startMain(){
         if(ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
@@ -44,9 +53,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             init(); //initialize all of the controls
         }
-
     }
-
 
     private void init() {
         _recyclerView = (RecyclerView) findViewById(R.id.recyclerViewVideo);
@@ -112,9 +119,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        init(); //initialize all of the controls
-    }
 }
