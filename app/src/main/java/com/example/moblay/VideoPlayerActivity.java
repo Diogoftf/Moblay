@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -58,6 +59,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements SurfaceHol
         gestureLibrary = GestureLibraries.fromRawResource(this, R.raw.gesture);
         mgr = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         proximity = mgr.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (!gestureLibrary.load()) {
             finish();
