@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.moblay">
-
     <!-- PERMISSIONS -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,11 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher4_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".TutorialOne"
+            android:label="Ajuda">
 
-        <activity android:name=".VideoPlayerActivity"
-            android:label=" "
+        </activity>
+        <activity
+            android:name=".VideoPlayerActivity"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName=".MainActivity"/>
+            android:label=" "
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

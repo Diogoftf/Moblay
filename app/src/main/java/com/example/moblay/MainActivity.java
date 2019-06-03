@@ -1,9 +1,13 @@
 package com.example.moblay;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -47,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         startMain();
+
+        SharedPreferences pref = getSharedPreferences("ActivityPREF", Context.MODE_PRIVATE);
+        if(pref.getBoolean("activity_executed", false) == false){
+            SharedPreferences.Editor ed = pref.edit();
+            ed.putBoolean("activity_executed", true);
+            ed.commit();
+            Intent intent = new Intent(this, TutorialOne.class);
+            startActivity(intent);
+        }
     }
 
     private void startMain(){
